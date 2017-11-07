@@ -18,7 +18,13 @@
 ### GitHub的使用
 
 1. GitHub的下载安装和使用前需要的简单配置都可以参考[GitHub Help](https://help.github.com/)
+
 2. 首先克隆我们的打码
+
+```github
+git clone https://github.com/YanWWW/MiddleProject.git
+```
+
 3. 每次写代码前一定记得先
 
 ```github
@@ -28,5 +34,7 @@ git pull
 4. 写完之后一定记得
 
 ```
+git add .
+git commit -m '对你做的事进行简单描述'
 git push
 ```
