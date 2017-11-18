@@ -1,5 +1,7 @@
 package com.example.materialtest;
 
+import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -17,6 +19,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.wyt.searchbox.SearchFragment;
+import com.wyt.searchbox.custom.IOnSearchClickListener;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,7 +29,7 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
-
+    private MediaPlayer mp;
     private Fruit[] fruits = {new Fruit("Apple", R.drawable.apple), new Fruit("Banana", R.drawable.banana),
             new Fruit("Orange", R.drawable.orange), new Fruit("Watermelon", R.drawable.watermelon),
             new Fruit("Pear", R.drawable.pear), new Fruit("Grape", R.drawable.grape),
@@ -50,10 +55,52 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
-        navView.setCheckedItem(R.id.nav_call);
+        //search bar add
+        final SearchFragment searchFragment = SearchFragment.newInstance();
+        searchFragment.setOnSearchClickListener(new IOnSearchClickListener() {
+            @Override
+            public void OnSearchClick(String keyword) {
+                int localid=0;
+                for(int i=0;i<fruitList.size();i++) {
+                    if (fruitList.get(i).getName().equals(keyword)) {
+                        localid = fruitList.get(i).getImageId();
+                    }
+                }
+
+                Intent intent = new Intent(MainActivity.this, FruitActivity.class);
+                intent.putExtra(FruitActivity.FRUIT_NAME, keyword);
+                intent.putExtra(FruitActivity.FRUIT_IMAGE_ID, localid);
+                Toast.makeText(MainActivity.this, keyword, Toast.LENGTH_SHORT).show();
+                startActivity(intent);
+
+            }
+        });
+
+        //beijin music
+
+
+        if(mp==null){
+            mp=MediaPlayer.create(this,R.raw.music1);
+        }
+        if(mp!=null){
+            mp.start();
+        }
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                mp.start();
+            }
+        });
+        //add complete.
+
+        navView.setCheckedItem(R.id.nav_search);
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
+                if(item.getItemId()==R.id.nav_search){
+                    searchFragment.show(getSupportFragmentManager(),SearchFragment.TAG);
+                }
+                //add some option function
                 mDrawerLayout.closeDrawers();
                 return true;
             }
